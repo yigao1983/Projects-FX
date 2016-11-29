@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import qpython.qconnection as qconn
 import matplotlib.pyplot as plt
-import RLS
 
 class MDPAnalytics(object):
     
@@ -48,6 +47,11 @@ class MDPAnalytics(object):
     def mdp_df(self):
         
         return self.__mdp_df
+    
+    @property
+    def mrls_df(self):
+        
+        return self.__mrls_df
     
     def get_mdp_df(self):
         
@@ -115,15 +119,13 @@ class MDPAnalytics(object):
         
         return r2
     
-    def get_mrls_df(self):
-        
-        ff_rng = [0.9, 0.925, 0.95, 0.975, 0.99, 0.999, 0.9999, 0.99999, 0.999999, 1.0]
+    def get_mrls_df(self, ff_rng):
         
         r2_lst = [self.mrls_regression(ff) for ff in ff_rng]
         
         self.__mrls_df = pd.DataFrame({'ff': ff_rng, 'r2': r2_lst}).set_index('ff', drop=True)
         
-        self.output_mrls_df()
+        #self.output_mrls_df()
         
         return self
     
@@ -132,7 +134,7 @@ class MDPAnalytics(object):
         self.__mrls_df.to_csv('mrls_{}_{}_{}_{}.csv'.format(self.__sym, self.__venue, self.__date_beg, self.__date_end))
         
         return self
-    
+"""
 if __name__ == "__main__":
     
     kwargs = {"hostname": "kdb1", "portnum": 10101, "username": "ygao", "password": "Password23"}
@@ -144,3 +146,4 @@ if __name__ == "__main__":
     fwd_ticks = 1
     
     mdp = MDPAnalytics(date_beg, date_end, sym, venue, fwd_ticks, **kwargs).get_mdp_df().get_mrls_df()
+"""
